@@ -1,15 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Goog PhotoFrame turns your device into a beautiful smart display with photos from Google Photos and a live clock.">
-  <title>Goog PhotoFrame</title>
+  <meta name="description" content="G.P PhotoFrame turns your device into a beautiful smart display with photos from Google Photos and a live clock.">
+  <title>G.P PhotoFrame</title>
   <style>
     :root {
       --bg: #0f172a;
-      --card: rgba(255,255,255,.05);
+      --card: rgba(15,23,42,0.75);
       --border: rgba(255,255,255,.12);
       --text: #f8fafc;
       --muted: #a5b4cc;
@@ -23,13 +22,43 @@
       min-height: 100vh;
       padding: 24px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #0f172a, #1e1b4b 55%, #311042);
+      background-color: var(--bg);
       color: var(--text);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .slideshow-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: pointer;
+    }
+
+    .slideshow-bg img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1);
+      transition: opacity 1.5s ease-in-out, transform 8s ease-out;
+      filter: brightness(0.45);
+    }
+
+    .slideshow-bg img.active {
+      opacity: 1;
+      transform: scale(1.08);
     }
 
     .container {
@@ -41,8 +70,14 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.25);
-      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      backdrop-filter: blur(16px);
+      animation: floatContainer 6s ease-in-out infinite;
+    }
+
+    @keyframes floatContainer {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
     }
 
     .badge {
@@ -83,6 +118,12 @@
       background: rgba(255,255,255,.035);
       border: 1px solid var(--border);
       border-radius: 16px;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,.06);
     }
 
     .feature h2 {
@@ -141,9 +182,16 @@
   </style>
 </head>
 <body>
+  <div class="slideshow-bg" id="slideshow">
+    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80" class="active" alt="Scenery">
+    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1920&q=80" alt="Family">
+    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80" alt="Scenery">
+    <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=1920&q=80" alt="Kids">
+  </div>
+
   <main class="container">
     <span class="badge">iOS Application</span>
-    <h1>Goog PhotoFrame</h1>
+    <h1>G.P PhotoFrame</h1>
     <p class="intro">
       Transform your device into a beautiful smart display.
       Enjoy your favorite Google Photos memories with a live
@@ -166,5 +214,18 @@
     <a href="privacy.html">Privacy Policy</a>
     <a href="terms.html">Terms of Use</a>
   </footer>
+
+  <script>
+    const slides = document.querySelectorAll('.slideshow-bg img');
+    let currentSlide = 0;
+
+    function nextSlide() {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }
+
+    setInterval(nextSlide, 5000);
+  </script>
 </body>
 </html>
